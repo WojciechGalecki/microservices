@@ -11,3 +11,21 @@ app:
   review-service:
     host: localhost
     port: 7003
+
+logging:
+  level:
+    root: INFO
+
+---
+spring.config.activate.on-profile: docker
+
+app:
+  product-service:
+    host: host.docker.internal
+    port: 7001
+  recommendation-service:
+    host: host.docker.internal
+    port: 7002
+  review-service:
+    host: host.docker.internal
+    port: 7003

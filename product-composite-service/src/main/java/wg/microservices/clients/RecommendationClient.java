@@ -13,8 +13,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import wg.api.core.recommendation.Recommendation;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class RecommendationClient {
@@ -28,11 +30,12 @@ public class RecommendationClient {
     private final RestTemplate restTemplate;
 
     public List<Recommendation> getRecommendations(int productId) {
-        return restTemplate.exchange(getUri(productId), GET, EMPTY, new ParameterizedTypeReference<List<Recommendation>>() {
+        log.info("Fetching recommendations for product id: {}", productId);
+        return restTemplate.exchange(getUrl(productId), GET, EMPTY, new ParameterizedTypeReference<List<Recommendation>>() {
         }).getBody();
     }
 
-    private URI getUri(int productId) {
+    private URI getUrl(int productId) {
         return UriComponentsBuilder.newInstance()
             .scheme("http")
             .host(recommendationServiceHost)

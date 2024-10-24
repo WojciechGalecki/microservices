@@ -8,8 +8,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import wg.api.core.product.Product;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ProductClient {
@@ -23,10 +25,11 @@ public class ProductClient {
     private final RestTemplate restTemplate;
 
     public Product getProduct(int id) {
-        return restTemplate.getForObject(getUri(id), Product.class);
+        log.info("Fetching product with id: {}", id);
+        return restTemplate.getForObject(getUrl(id), Product.class);
     }
 
-    private URI getUri(int id) {
+    private URI getUrl(int id) {
         return UriComponentsBuilder.newInstance()
             .scheme("http")
             .host(productServiceHost)

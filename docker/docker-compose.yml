@@ -1,0 +1,28 @@
+name: app
+
+services:
+  product-composite:
+    build: ../product-composite-service
+    mem_limit: 512m
+    ports:
+      - "7000:7000"
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+
+  product:
+    build: ../product-service
+    mem_limit: 512m
+    ports:
+      - "7001:7001"
+
+  recommendation:
+    build: ../recommendation-service
+    mem_limit: 512m
+    ports:
+      - "7002:7002"
+
+  review:
+    build: ../review-service
+    mem_limit: 512m
+    ports:
+      - "7003:7003"

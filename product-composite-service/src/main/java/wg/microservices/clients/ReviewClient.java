@@ -13,8 +13,10 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import wg.api.core.review.Review;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class ReviewClient {
@@ -28,11 +30,12 @@ public class ReviewClient {
     private final RestTemplate restTemplate;
 
     public List<Review> getReviews(int productId) {
-        return restTemplate.exchange(getUri(productId), GET, EMPTY, new ParameterizedTypeReference<List<Review>>() {
+        log.info("Fetching reviews for product id: {}", productId);
+        return restTemplate.exchange(getUrl(productId), GET, EMPTY, new ParameterizedTypeReference<List<Review>>() {
         }).getBody();
     }
 
-    private URI getUri(int productId) {
+    private URI getUrl(int productId) {
         return UriComponentsBuilder.newInstance()
             .scheme("http")
             .host(reviewServiceHost)
