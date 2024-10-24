@@ -1,3 +1,4 @@
 ext {
     SPRING_BOOT_VERSION = "3.3.4"
+    SPRINGDOC_OPENAPI_VERSION = "2.6.0"
 }
