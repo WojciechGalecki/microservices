@@ -1,0 +1,7 @@
+apply plugin: "java-library"
+
+dependencies {
+    implementation platform("org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}")
+
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+}

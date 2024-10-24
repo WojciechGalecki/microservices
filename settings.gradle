@@ -13,5 +13,7 @@ include ':recommendation-service'
 include ':review-service'
 
 include ':api'
+include ':exception'
 
 project(":api").projectDir = file("./libs/api")
+project(":exception").projectDir = file("./libs/exception")
