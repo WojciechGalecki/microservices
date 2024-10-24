@@ -1,0 +1,50 @@
+plugins {
+	id 'java'
+	id 'io.spring.dependency-management' version '1.1.6'
+}
+
+apply from: "versions.gradle"
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+allprojects {
+	repositories {
+		mavenCentral()
+		mavenLocal()
+		maven { url 'https://plugins.gradle.org/m2/' }
+	}
+}
+
+subprojects {
+	group = 'wg'
+	version = '0.0.1-SNAPSHOT'
+
+	apply plugin: 'java'
+	apply plugin: 'idea'
+	apply plugin: 'io.spring.dependency-management'
+
+	java {
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(21)
+		}
+	}
+
+	buildscript {
+		repositories {
+			mavenCentral()
+			maven { url 'https://plugins.gradle.org/m2/' }
+		}
+	}
+
+	dependencyManagement {
+		imports {
+			mavenBom "org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}"
+			//mavenBom "org.springframework.cloud:spring-cloud-dependencies:${SPRING_CLOUD_DEPENDENCIES_VERSION}"
+			//mavenBom "io.micrometer:micrometer-tracing-bom:${MICROMETER_TRACING_BOM_VERSION}"
+		}
+	}
+}
