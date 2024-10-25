@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Mono;
 import wg.api.composite.product.ProductAggregate;
 import wg.api.composite.product.RecommendationSummary;
 import wg.api.composite.product.ReviewSummary;
@@ -22,13 +23,17 @@ public class ProductCompositeService {
     private final RecommendationClient recommendationClient;
     private final ReviewClient reviewClient;
 
-    public ProductAggregate getProduct(int productId) {
-        Product product = productClient.getProduct(productId);
-        List<Recommendation> recommendations = recommendationClient.getRecommendations(productId);
-        List<Review> reviews = reviewClient.getReviews(productId);
+    public Mono<ProductAggregate> getProduct(int productId) {
+        return Mono.zip(
+            values -> create((Product) values[0], (List<Recommendation>) values[1], (List<Review>) values[2]),
+            productClient.getProduct(productId),
+            recommendationClient.getRecommendations(productId).collectList(),
+            reviewClient.getReviews(productId).collectList());
+    }
 
+    private ProductAggregate create(Product product, List<Recommendation> recommendations, List<Review> reviews) {
         return new ProductAggregate(
-            productId,
+            product.productId(),
             product.name(),
             product.weight(),
             getRecommendationSummaries(recommendations),

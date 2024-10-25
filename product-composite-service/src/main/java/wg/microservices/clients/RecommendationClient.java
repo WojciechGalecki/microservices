@@ -1,19 +1,15 @@
 package wg.microservices.clients;
 
-import static org.springframework.http.HttpEntity.EMPTY;
-import static org.springframework.http.HttpMethod.GET;
-
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import wg.api.core.recommendation.Recommendation;
 
 @Slf4j
@@ -27,12 +23,14 @@ public class RecommendationClient {
     @Value("${app.recommendation-service.port}")
     int recommendationServicePort;
 
-    private final RestTemplate restTemplate;
+    private final WebClient webClient;
 
-    public List<Recommendation> getRecommendations(int productId) {
+    public Flux<Recommendation> getRecommendations(int productId) {
         log.info("Fetching recommendations for product id: {}", productId);
-        return restTemplate.exchange(getUrl(productId), GET, EMPTY, new ParameterizedTypeReference<List<Recommendation>>() {
-        }).getBody();
+        return webClient.get()
+            .uri(getUrl(productId))
+            .retrieve()
+            .bodyToFlux(Recommendation.class);
     }
 
     private URI getUrl(int productId) {

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Mono;
 import wg.api.core.product.Product;
 import wg.exception.InvalidInputException;
 import wg.exception.NotFoundException;
@@ -19,29 +20,28 @@ public class ProductService {
     private final ProductMapper productMapper;
     private final ProductRepository productRepository;
 
-    public Product getProduct(int productId) {
+    public Mono<Product> getProduct(int productId) {
         log.info("Fetching product with productId: {}", productId);
-        ProductEntity productEntity = productRepository.findByProductId(productId)
-            .orElseThrow(() -> new NotFoundException("No product found for productId: " + productId));
-        return productMapper.entityToApi(productEntity);
+        return productRepository.findByProductId(productId)
+            .switchIfEmpty(Mono.error(new NotFoundException("No product found for productId: " + productId)))
+            .map(productMapper::entityToApi);
     }
 
-    public Product createProduct(Product product) {
+    public Mono<Product> createProduct(Product product) {
         log.info("Creating new product");
-        try {
-            ProductEntity productEntity = productMapper.apiToEntity(product);
-            ProductEntity savedProductEntity = productRepository.save(productEntity);
-            return productMapper.entityToApi(savedProductEntity);
-        } catch (DuplicateKeyException ex) {
-            throw new InvalidInputException("Duplicate key, Product Id: " + product.productId());
-        }
+        ProductEntity productEntity = productMapper.apiToEntity(product);
+        return productRepository.save(productEntity)
+            .onErrorMap(
+                DuplicateKeyException.class,
+                ex -> new InvalidInputException("Duplicate key, Product Id: " + product.productId()))
+            .map(productMapper::entityToApi);
     }
 
-    public void deleteProduct(int productId) {
+    public Mono<Void> deleteProduct(int productId) {
         log.info("Deleting product with productId: {}", productId);
-        productRepository.findByProductId(productId).ifPresentOrElse(p -> {
-            productRepository.delete(p);
-            log.info("Successfully deleted product with productId: {}", productId);
-        }, () -> log.info("Couldn't find product with productId: {}", productId));
+        return productRepository.findByProductId(productId)
+            .map(productRepository::delete)
+            .log("Successfully deleted product with productId: " + productId)
+            .flatMap(e -> e);
     }
 }
