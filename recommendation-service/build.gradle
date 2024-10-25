@@ -11,10 +11,14 @@ dependencies {
     implementation project(':exception')
 
     compileOnly 'org.projectlombok:lombok'
+    compileOnly "org.mapstruct:mapstruct-processor:${MAPSTRUCT_VERSION}"
     annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.mapstruct:mapstruct-processor:${MAPSTRUCT_VERSION}"
 
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation "org.mapstruct:mapstruct:${MAPSTRUCT_VERSION}"
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'
