@@ -43,7 +43,7 @@ subprojects {
 	dependencyManagement {
 		imports {
 			mavenBom "org.springframework.boot:spring-boot-dependencies:${SPRING_BOOT_VERSION}"
-			//mavenBom "org.springframework.cloud:spring-cloud-dependencies:${SPRING_CLOUD_DEPENDENCIES_VERSION}"
+			mavenBom "org.springframework.cloud:spring-cloud-dependencies:${SPRING_CLOUD_VERSION}"
 			//mavenBom "io.micrometer:micrometer-tracing-bom:${MICROMETER_TRACING_BOM_VERSION}"
 		}
 	}

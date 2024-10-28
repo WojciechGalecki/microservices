@@ -9,6 +9,7 @@ apply plugin: 'org.springframework.boot'
 dependencies {
     implementation project(':api')
     implementation project(':exception')
+    implementation project(':event')
 
     compileOnly 'org.projectlombok:lombok'
     compileOnly "org.mapstruct:mapstruct-processor:${MAPSTRUCT_VERSION}"
@@ -19,6 +20,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
     implementation "org.mapstruct:mapstruct:${MAPSTRUCT_VERSION}"
+    implementation 'org.springframework.cloud:spring-cloud-starter-stream-rabbit'
+    implementation 'org.springframework.cloud:spring-cloud-starter-stream-kafka'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'io.projectreactor:reactor-test'

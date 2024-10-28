@@ -19,9 +19,9 @@ public class RecommendationClient {
     private static final String RECOMMENDATION_SERVICE_PATH = "/recommendations";
 
     @Value("${app.recommendation-service.host}")
-    String recommendationServiceHost;
+    private String recommendationServiceHost;
     @Value("${app.recommendation-service.port}")
-    int recommendationServicePort;
+    private int recommendationServicePort;
 
     private final WebClient webClient;
 

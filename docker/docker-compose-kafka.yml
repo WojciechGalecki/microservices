@@ -7,10 +7,10 @@ services:
     ports:
       - "7000:7000"
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: docker,kafka
     depends_on:
-      rabbitmq:
-        condition: service_healthy
+      kafka:
+        condition: service_started
 
   product:
     build: ../product-service
@@ -18,12 +18,12 @@ services:
     ports:
       - "7001:7001"
     environment:
-      SPRING_PROFILES_ACTIVE: docker
+      SPRING_PROFILES_ACTIVE: docker,kafka
     depends_on:
       mongodb:
         condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
+      kafka:
+        condition: service_started
 
   recommendation:
     build: ../recommendation-service
@@ -75,14 +75,26 @@ services:
       timeout: 2s
       retries: 60
 
-  rabbitmq:
-    image: rabbitmq:3.11.8-management
+  kafka:
+    image: confluentinc/cp-kafka:7.3.1
+    restart: always
+    mem_limit: 1024m
+    ports:
+      - "9092:9092"
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:9092
+      - KAFKA_BROKER_ID=1
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    depends_on:
+      - zookeeper
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.1
+    restart: always
     mem_limit: 512m
     ports:
-    - 5672:5672
-    - 15672:15672
-    healthcheck:
-      test: [ "CMD", "rabbitmqctl", "status" ]
-      interval: 5s
-      timeout: 2s
-      retries: 60
+      - "2181:2181"
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+
