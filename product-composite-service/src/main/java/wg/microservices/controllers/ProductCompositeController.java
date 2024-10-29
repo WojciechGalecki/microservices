@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
@@ -17,12 +18,13 @@ import wg.microservices.events.EventPublisher;
 import wg.microservices.services.ProductCompositeService;
 
 @RestController
+@RequestMapping("/product-composite")
 @RequiredArgsConstructor
 public class ProductCompositeController {
     private final ProductCompositeService productCompositeService;
     private final EventPublisher eventPublisher;
 
-    @GetMapping(value = "/product-composite/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Mono<ProductAggregate> getProduct(@PathVariable int id) {
         return productCompositeService.getProduct(id);
     }

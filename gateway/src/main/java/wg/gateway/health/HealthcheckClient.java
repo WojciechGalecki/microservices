@@ -1,4 +1,4 @@
-package wg.microservices.clients;
+package wg.gateway.health;
 
 import java.net.URI;
 import java.util.logging.Level;
@@ -13,7 +13,7 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @Component
-public class HealthClient {
+public class HealthcheckClient {
     private static final String PRODUCT_SVC_HOST = "product";
     private static final String RECOMMENDATION_SVC_HOST = "recommendation";
     private static final String REVIEW_SVC_HOST = "review";
@@ -21,7 +21,7 @@ public class HealthClient {
 
     private final WebClient webClient;
 
-    public HealthClient(WebClient.Builder webClientBuilder) {
+    public HealthcheckClient(WebClient.Builder webClientBuilder) {
         this.webClient = webClientBuilder.build();
     }
 

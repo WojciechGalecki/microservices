@@ -12,6 +12,7 @@ include ':product-service'
 include ':recommendation-service'
 include ':review-service'
 include ':discovery-server'
+include ':gateway'
 
 include ':api'
 include ':exception'
