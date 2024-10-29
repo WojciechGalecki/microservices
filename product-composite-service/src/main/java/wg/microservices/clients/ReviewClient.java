@@ -2,28 +2,25 @@ package wg.microservices.clients;
 
 import java.net.URI;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
 import wg.api.core.review.Review;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class ReviewClient {
-    private static final String REVIEW_SERVICE_PATH = "/reviews";
-
-    @Value("${app.review-service.host}")
-    private String reviewServiceHost;
-    @Value("${app.review-service.port}")
-    private int reviewServicePort;
+    private static final String REVIEW_SVC_HOST = "review";
+    private static final String REVIEW_SVC_PATH = "/reviews";
 
     private final WebClient webClient;
+
+    public ReviewClient(WebClient.Builder webClientBuilder) {
+        this.webClient = webClientBuilder.build();
+    }
 
     public Flux<Review> getReviews(int productId) {
         log.info("Fetching reviews for product id: {}", productId);
@@ -36,9 +33,8 @@ public class ReviewClient {
     private URI getUrl(int productId) {
         return UriComponentsBuilder.newInstance()
             .scheme("http")
-            .host(reviewServiceHost)
-            .port(reviewServicePort)
-            .path(REVIEW_SERVICE_PATH)
+            .host(REVIEW_SVC_HOST)
+            .path(REVIEW_SVC_PATH)
             .queryParam("productId", productId)
             .build()
             .toUri();

@@ -1,6 +1,7 @@
 package wg.microservices.configuration;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -13,8 +14,9 @@ public class Configuration {
     @Value("${app.taskQueueSize}") Integer taskQueueSize;
 
     @Bean
-    WebClient webClient() {
-        return WebClient.builder().build();
+    @LoadBalanced
+    public WebClient.Builder loadBalancedWebClientBuilder() {
+        return WebClient.builder();
     }
 
     @Bean

@@ -11,6 +11,7 @@ include ':product-composite-service'
 include ':product-service'
 include ':recommendation-service'
 include ':review-service'
+include ':discovery-server'
 
 include ':api'
 include ':exception'

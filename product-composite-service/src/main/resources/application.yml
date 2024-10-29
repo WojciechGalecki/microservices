@@ -1,17 +1,10 @@
+spring.application.name: product-composite
+
 server:
   port: 7000
   error.include-message: always
 
 app:
-  product-service:
-    host: localhost
-    port: 7001
-  recommendation-service:
-    host: localhost
-    port: 7002
-  review-service:
-    host: localhost
-    port: 7003
   threadPoolSize: 10
   taskQueueSize: 100
 
@@ -58,20 +51,31 @@ spring.rabbitmq:
   username: guest
   password: guest
 
+app.eureka-server: localhost
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${app.eureka-server}:8761/eureka/
+    initialInstanceInfoReplicationIntervalSeconds: 5
+    registryFetchIntervalSeconds: 5
+  instance:
+    leaseRenewalIntervalInSeconds: 5
+    leaseExpirationDurationInSeconds: 5
+
 management.endpoint.health.show-details: "ALWAYS"
 management.endpoints.web.exposure.include: "*"
 
 ---
 spring.config.activate.on-profile: docker
 
-app:
-  product-service.host: host.docker.internal
-  recommendation-service.host: host.docker.internal
-  review-service.host: host.docker.internal
+server.port: 8080
 
 spring.rabbitmq.host: rabbitmq
 
 spring.cloud.stream.kafka.binder.brokers: kafka
+
+app.eureka-server: eureka
 
 ---
 spring.config.activate.on-profile: streaming_partitioned
